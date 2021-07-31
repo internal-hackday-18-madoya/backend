@@ -19,6 +19,7 @@ const database = admin.database();
 const groupPayCollection = fireStore.collection("group-pay");
 const settlementCount = fireStore.collection("settlement-count");
 const settlementCollection = fireStore.collection("settlement");
+const approveCollection = fireStore.collection("approve");
 
 settlementCount.doc("count").set({ count: 0 });
 
@@ -80,10 +81,6 @@ app.post("/grouppay/", async (req, res) => {
 app.post("/grouppay/:id/calculate/", async (req, res) => {
   const { id } = req.params;
 
-  await groupPayCollection.doc(id).update({
-    active: false,
-  });
-
   const doc = await groupPayCollection.doc(id).get();
 
   const settlement = await fetchSettlement(doc.id);
@@ -97,12 +94,53 @@ app.post("/grouppay/:id/calculate/", async (req, res) => {
 
   database.ref("/messages").child(uniqId).set({
     from: "BOT",
-    type: "CALCULATE",
+    type: "CALCULATE_START",
     data,
     timestamp: new Date().getTime(),
   });
 
   res.send({});
+});
+
+app.post("/grouppay/:id/approve/", async (req, res) => {
+  const { id } = req.params;
+  const { from } = req.body;
+
+  await approveCollection.add({
+    groupPayId: id,
+    from,
+  });
+
+  const groupPay = (await groupPayCollection.doc(id).get()).data();
+  const approveNum = (
+    await approveCollection.where("groupPayId", "==", id).get()
+  ).docs.length;
+
+  if (groupPay.members.length <= approveNum) {
+    await groupPayCollection.doc(id).update({
+      active: false,
+    });
+
+    const doc = await groupPayCollection.doc(id).get();
+
+    const settlement = await fetchSettlement(doc.id);
+    const data = Object.assign(doc.data(), {
+      id: doc.id,
+      settlement,
+      settlementAmount: splitBill(settlement),
+    });
+
+    const uniqId = database.ref("/messages").push().key;
+
+    database.ref("/messages").child(uniqId).set({
+      from: "BOT",
+      type: "CALCULATE_DONE",
+      data,
+      timestamp: new Date().getTime(),
+    });
+  }
+
+  res.send();
 });
 
 // 決済情報を追加する

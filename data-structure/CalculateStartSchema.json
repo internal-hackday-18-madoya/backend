@@ -1,7 +1,7 @@
 {
     "id": "123456",
     "from": "BOT",
-    "type": "CALCULATE",
+    "type": "CALCULATE_START",
     "data": {
         "id": "12345",
         "name": "グループペイ名",
