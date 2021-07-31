@@ -18,5 +18,15 @@
             ]
         }
     ],
+    "settlementAmount": [
+        {
+            "memberId": "member1",
+            "amount": 200
+        },
+        {
+            "memberId": "member2",
+            "amount": 200
+        }
+    ],
     "createdAt": 12345
 }
