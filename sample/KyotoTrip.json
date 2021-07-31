@@ -1,0 +1,169 @@
+{
+    "id": "12345",
+    "name": "2021年7月京都旅行",
+    "active": true,
+    "members": [
+        "memberId1",
+        "memberId2",
+        "memberId3",
+        "memberId4",
+        "memberId5"
+    ],
+    "settlement": [
+        {
+            "id": "10",
+            "amount": 150000,
+            "storeName": "JR東京",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId2",
+                "memberId3",
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "11",
+            "amount": 200000,
+            "storeName": "京都駅前ホテル",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId2",
+                "memberId3",
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "12",
+            "amount": 3500,
+            "storeName": "JR京都バス",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId2",
+                "memberId3",
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "13",
+            "amount": 1500,
+            "storeName": "龍安寺",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId2",
+                "memberId3",
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "14",
+            "amount": 4500,
+            "storeName": "八ツ橋",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "15",
+            "amount": 1500,
+            "storeName": "金閣寺",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId2",
+                "memberId3",
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "16",
+            "amount": 1500,
+            "storeName": "京都タクシー",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId2",
+                "memberId3",
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "17",
+            "amount": 25000,
+            "storeName": "京料理",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId2",
+                "memberId3",
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "18",
+            "amount": 10000,
+            "storeName": "Bar Kyoto",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId4",
+                "memberId5"
+            ]
+        },
+        {
+            "id": "19",
+            "amount": 1000,
+            "storeName": "京都タクシー",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId1",
+                "memberId2",
+                "memberId3"
+            ]
+        },
+        {
+            "id": "20",
+            "amount": 1500,
+            "storeName": "京都深夜タクシー",
+            "storeImage": "",
+            "settlementAt": 12345,
+            "members": [
+                "memberId4",
+                "memberId5"
+            ]
+        }
+    ],
+    "settlementAmount": [
+        {
+            "memberId": "member1",
+            "amount": 200
+        },
+        {
+            "memberId": "member2",
+            "amount": 200
+        }
+    ],
+    "createdAt": 12345
+}
