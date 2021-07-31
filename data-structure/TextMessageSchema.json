@@ -1,0 +1,9 @@
+{
+    "id": "123456",
+    "from": "member1",
+    "type": "TEXT",
+    "data": {
+        "message": "メッセージ"
+    },
+    "timestamp": 12345
+}

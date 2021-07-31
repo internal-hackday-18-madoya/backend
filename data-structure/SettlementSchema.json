@@ -1,0 +1,16 @@
+{
+    "id": "123456",
+    "from": "member1",
+    "type": "SETTLEMENT",
+    "data": {
+        "id": "12345",
+        "amount": 2000,
+        "storeName": "店名",
+        "settlementAt": 12345,
+        "members": [
+            "memberId1",
+            "memberId2"
+        ]
+    },
+    "timestamp": 12345
+}
