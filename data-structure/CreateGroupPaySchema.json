@@ -1,7 +1,7 @@
 {
     "id": "123456",
-    "from": "member1",
-    "type": "SETTLEMENT",
+    "from": "BOT",
+    "type": "CREATE_GROUPPAY",
     "data": {
         "id": "12345",
         "name": "グループペイ名",
@@ -11,6 +11,7 @@
             "memberId2"
         ],
         "settlement": [],
+        "settlementAmount": [],
         "createdAt": 12345
     },
     "timestamp": 12345

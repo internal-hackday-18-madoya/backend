@@ -1,12 +1,13 @@
 {
     "id": "123456",
-    "from": "member1",
+    "from": "BOT",
     "type": "SETTLEMENT",
     "data": {
         "id": "12345",
         "amount": 2000,
         "storeName": "店名",
         "settlementAt": 12345,
+        "owner": "memberId3",
         "members": [
             "memberId1",
             "memberId2"

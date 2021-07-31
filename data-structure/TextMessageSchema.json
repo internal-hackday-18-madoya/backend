@@ -1,6 +1,6 @@
 {
     "id": "123456",
-    "from": "member1",
+    "from": "BOT",
     "type": "TEXT",
     "data": {
         "message": "メッセージ"
