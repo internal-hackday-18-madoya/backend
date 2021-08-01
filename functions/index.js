@@ -49,13 +49,14 @@ app.get("/grouppay/", async (req, res) => {
 });
 
 app.post("/grouppay/", async (req, res) => {
-  const { name, members } = req.body;
+  const { name, members, groupName } = req.body;
 
   const data = {
     name,
     members,
     active: true,
     settlement: [],
+    groupName,
     createdAt: new Date().getTime(),
   };
 
@@ -112,11 +113,15 @@ app.post("/grouppay/:id/approve/", async (req, res) => {
   });
 
   const groupPay = (await groupPayCollection.doc(id).get()).data();
-  const approveNum = (
+  const approveFromList = (
     await approveCollection.where("groupPayId", "==", id).get()
-  ).docs.length;
+  ).docs
+    .map((doc) => doc.data())
+    .map((approve) => approve.from);
 
-  if (groupPay.members.length <= approveNum) {
+  if (
+    groupPay.members.every((memberId) => approveFromList.includes(memberId))
+  ) {
     await groupPayCollection.doc(id).update({
       active: false,
     });
