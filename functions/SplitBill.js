@@ -23,7 +23,7 @@ const splitBill = (settlementList) => {
 
 const a = (settlement) => {
   const owner = settlement.owner;
-  const amount = settlement.amount / settlement.members.length + 1;
+  const amount = settlement.amount / settlement.members.length;
 
   let a = settlement.members.map((memberId) => {
     return {
