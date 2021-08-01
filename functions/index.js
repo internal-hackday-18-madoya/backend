@@ -155,7 +155,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "10",
       amount: 150000,
       storeName: "JR東京",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_train_black_48_scvx3a.png",
       owner: "memberId1",
       settlementAt: 12345,
       members: [
@@ -170,7 +171,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "11",
       amount: 200000,
       storeName: "京都駅前ホテル",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_hotel_black_48_wvj0mr.png",
       owner: "memberId2",
       settlementAt: 12345,
       members: [
@@ -185,7 +187,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "12",
       amount: 3500,
       storeName: "JR京都バス",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_directions_bus_black_48_qhehdk.png",
       owner: "memberId1",
       settlementAt: 12345,
       members: [
@@ -200,7 +203,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "13",
       amount: 1500,
       storeName: "龍安寺",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_foundation_black_48_obvs8a.png",
       owner: "memberId1",
       settlementAt: 12345,
       members: [
@@ -215,7 +219,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "14",
       amount: 4500,
       storeName: "八ツ橋",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_redeem_black_48_tfmvkv.png",
       owner: "memberId1",
       settlementAt: 12345,
       members: ["memberId1", "memberId4", "memberId5"],
@@ -224,7 +229,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "15",
       amount: 1500,
       storeName: "金閣寺",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_foundation_black_48_obvs8a.png",
       owner: "memberId1",
       settlementAt: 12345,
       members: [
@@ -239,7 +245,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "16",
       amount: 1500,
       storeName: "京都タクシー",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_local_taxi_black_48_r2jlhb.png",
       owner: "memberId1",
       settlementAt: 12345,
       members: [
@@ -254,7 +261,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "17",
       amount: 25000,
       storeName: "京料理",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_food_bank_black_48_dcvjgx.png",
       owner: "memberId1",
       settlementAt: 12345,
       members: [
@@ -269,7 +277,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "18",
       amount: 10000,
       storeName: "Bar Kyoto",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_liquor_black_48_sogyeb.png",
       owner: "memberId5",
       settlementAt: 12345,
       members: ["memberId4", "memberId5"],
@@ -278,7 +287,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "19",
       amount: 1000,
       storeName: "京都タクシー",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_local_taxi_black_48_r2jlhb.png",
       owner: "memberId1",
       settlementAt: 12345,
       members: ["memberId1", "memberId2", "memberId3"],
@@ -287,7 +297,8 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       id: "20",
       amount: 1500,
       storeName: "京都深夜タクシー",
-      storeImage: "",
+      storeImage:
+        "https://res.cloudinary.com/ariaqua/image/upload/v1627723729/GroupPay/outline_local_taxi_black_48_r2jlhb.png",
       owner: "memberId5",
       settlementAt: 12345,
       members: ["memberId4", "memberId5"],
