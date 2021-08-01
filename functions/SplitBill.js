@@ -14,7 +14,7 @@ const splitBill = (settlementList) => {
       paymentAmounts: Object.keys(c[key]).map((key2) => {
         return {
           memberId: key2,
-          amount: c[key][key2],
+          amount: Math.floor(c[key][key2]),
         };
       }),
     };
