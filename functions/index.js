@@ -22,6 +22,7 @@ const settlementCollection = fireStore.collection("settlement");
 const approveCollection = fireStore.collection("approve");
 
 settlementCount.doc("count").set({ count: 0 });
+database.ref("/active-group-pay").set(null);
 
 const fetchSettlement = async (groupPayId) => {
   return (
@@ -33,36 +34,41 @@ const fetchSettlement = async (groupPayId) => {
   });
 };
 
+const fetchGroupPay = async (doc) => {
+  const settlement = await fetchSettlement(doc.id);
+  return Object.assign(doc.data(), {
+    id: doc.id,
+    settlement,
+    settlementAmount: splitBill(settlement),
+  });
+};
+
 app.get("/grouppay/", async (req, res) => {
   const querySnapshot = await groupPayCollection.get();
-  const data = await Promise.all(
-    querySnapshot.docs.map(async (doc) => {
-      const settlement = await fetchSettlement(doc.id);
-      return Object.assign(doc.data(), {
-        id: doc.id,
-        settlement,
-        settlementAmount: splitBill(settlement),
-      });
-    })
-  );
+  const data = await Promise.all(querySnapshot.docs.map(fetchGroupPay));
   res.send(data);
 });
 
 app.post("/grouppay/", async (req, res) => {
   const { name, members, groupName } = req.body;
 
-  const data = {
+  const payload = {
     name,
     members,
     active: true,
     settlement: [],
+    settlementAmount: [],
     groupName,
     createdAt: new Date().getTime(),
   };
 
-  const doc = await groupPayCollection.add(data);
+  const doc = await groupPayCollection.add(payload);
 
   const uniqId = database.ref("/messages").push().key;
+
+  const data = Object.assign(payload, {
+    id: doc.id,
+  });
 
   database.ref("/messages").child(uniqId).set({
     from: "BOT",
@@ -71,11 +77,9 @@ app.post("/grouppay/", async (req, res) => {
     timestamp: new Date().getTime(),
   });
 
-  res.send(
-    Object.assign(data, {
-      id: doc.id,
-    })
-  );
+  database.ref("/active-group-pay").set(data);
+
+  res.send(data);
 });
 
 // 精算する
@@ -127,22 +131,18 @@ app.post("/grouppay/:id/approve/", async (req, res) => {
     });
 
     const doc = await groupPayCollection.doc(id).get();
-
-    const settlement = await fetchSettlement(doc.id);
-    const data = Object.assign(doc.data(), {
-      id: doc.id,
-      settlement,
-      settlementAmount: splitBill(settlement),
-    });
+    const updateGroupPay = fetchGroupPay(doc);
 
     const uniqId = database.ref("/messages").push().key;
 
     database.ref("/messages").child(uniqId).set({
       from: "BOT",
       type: "CALCULATE_DONE",
-      data,
+      data: updateGroupPay,
       timestamp: new Date().getTime(),
     });
+
+    database.ref("/active-group-pay").set(updateGroupPay);
   }
 
   res.send();
@@ -336,6 +336,13 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       timestamp: new Date().getTime(),
     });
 
+  (async () => {
+    const doc = await groupPayCollection.doc(id).get();
+    const updateGroupPay = await fetchGroupPay(doc);
+    console.log("=============================", updateGroupPay);
+    database.ref("/active-group-pay").set(updateGroupPay);
+  })();
+
   res.send(
     Object.assign(data, {
       id: doc.id,
@@ -350,6 +357,15 @@ app.post("/settlement/:id/members/", async (req, res) => {
   const doc = await settlementCollection.doc(id).update({
     members,
   });
+
+  (async () => {
+    const groupPayId = (await settlementCollection.doc(id).get()).data()
+      .groupPayId;
+    const doc = await groupPayCollection.doc(groupPayId).get();
+    const groupPay = fetchGroupPay(doc);
+
+    database.ref("/active-group-pay").set(groupPay);
+  })();
 
   res.send(doc);
 });
