@@ -1,4 +1,4 @@
-const { splitBill } = require("./SplitBill");
+const { splitBill, burdenAmount } = require("./SplitBill");
 
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
@@ -12,6 +12,15 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(function (req, res, next) {
+  console.log(`===== REQUEST START 【${req.method}】 ${req.originalUrl} =====`);
+  console.log(`REQUEST PARAMS`);
+  console.table(req.params);
+  console.log(`REQUEST BODY`);
+  console.table(req.body);
+  next();
+});
 
 const fireStore = admin.firestore();
 const database = admin.database();
@@ -40,7 +49,23 @@ const fetchGroupPay = async (doc) => {
     id: doc.id,
     settlement,
     settlementAmount: splitBill(settlement),
+    burdenAmount: burdenAmount(settlement),
   });
+};
+
+const updateActiveGroupPay = async () => {
+  const querySnapshot = await groupPayCollection
+    .where("active", "==", true)
+    .limit(1)
+    .get();
+  const doc = querySnapshot.docs[0];
+
+  const activeGroupPay = await fetchGroupPay(doc);
+
+  database.ref("/active-group-pay").set(activeGroupPay);
+  console.log(
+    "=================== UPDATE ACTIVE GROUP PAY  ======================"
+  );
 };
 
 app.get("/grouppay/", async (req, res) => {
@@ -77,7 +102,7 @@ app.post("/grouppay/", async (req, res) => {
     timestamp: new Date().getTime(),
   });
 
-  database.ref("/active-group-pay").set(data);
+  updateActiveGroupPay();
 
   res.send(data);
 });
@@ -131,7 +156,7 @@ app.post("/grouppay/:id/approve/", async (req, res) => {
     });
 
     const doc = await groupPayCollection.doc(id).get();
-    const updateGroupPay = fetchGroupPay(doc);
+    const updateGroupPay = await fetchGroupPay(doc);
 
     const uniqId = database.ref("/messages").push().key;
 
@@ -142,7 +167,7 @@ app.post("/grouppay/:id/approve/", async (req, res) => {
       timestamp: new Date().getTime(),
     });
 
-    database.ref("/active-group-pay").set(updateGroupPay);
+    updateActiveGroupPay();
   }
 
   res.send();
@@ -336,12 +361,7 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       timestamp: new Date().getTime(),
     });
 
-  (async () => {
-    const doc = await groupPayCollection.doc(id).get();
-    const updateGroupPay = await fetchGroupPay(doc);
-    console.log("=============================", updateGroupPay);
-    database.ref("/active-group-pay").set(updateGroupPay);
-  })();
+  updateActiveGroupPay();
 
   res.send(
     Object.assign(data, {
@@ -358,14 +378,7 @@ app.post("/settlement/:id/members/", async (req, res) => {
     members,
   });
 
-  (async () => {
-    const groupPayId = (await settlementCollection.doc(id).get()).data()
-      .groupPayId;
-    const doc = await groupPayCollection.doc(groupPayId).get();
-    const groupPay = fetchGroupPay(doc);
-
-    database.ref("/active-group-pay").set(groupPay);
-  })();
+  updateActiveGroupPay();
 
   res.send(doc);
 });

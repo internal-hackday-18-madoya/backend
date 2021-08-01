@@ -60,5 +60,19 @@
             ]
         }
     ],
+    "burdenAmount": [
+        {
+            "memberId": "B",
+            "paymentAmounts": 1333
+        },
+        {
+            "memberId": "C",
+            "paymentAmounts": 1333
+        },
+        {
+            "memberId": "A",
+            "paymentAmounts": 334
+        }
+    ],
     "createdAt": 12345
 }
