@@ -305,7 +305,7 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
     groupPayId: id,
   });
 
-  await settlementCollection.add(data);
+  const doc = await settlementCollection.add(data);
 
   await settlementCount.doc("count").set({
     count: count + 1,
@@ -313,14 +313,23 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
 
   const uniqId = database.ref("/messages").push().key;
 
-  database.ref("/messages").child(uniqId).set({
-    from: "BOT",
-    type: "SETTLEMENT",
-    data,
-    timestamp: new Date().getTime(),
-  });
+  database
+    .ref("/messages")
+    .child(uniqId)
+    .set({
+      from: "BOT",
+      type: "SETTLEMENT",
+      data: Object.assign(data, {
+        id: doc.id,
+      }),
+      timestamp: new Date().getTime(),
+    });
 
-  res.send(data);
+  res.send(
+    Object.assign(data, {
+      id: doc.id,
+    })
+  );
 });
 
 app.post("/settlement/:id/members/", async (req, res) => {
