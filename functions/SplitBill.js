@@ -73,17 +73,6 @@ const toCashFlow = (settlement) => {
   return [].concat(send, receive, [shop]);
 };
 
-const settlementList = [
-  { owner: "A", members: ["A", "B", "C"], amount: 1000 },
-  { owner: "B", members: ["B", "C"], amount: 2000 },
-];
-
-console.log("=======================================");
-// console.log(JSON.stringify(splitBill(settlementList), null, 2));
-console.log("=======================================");
-console.log(JSON.stringify(burdenAmount(settlementList), null, 2));
-console.log("=======================================");
-
 module.exports = {
   splitBill,
   burdenAmount,

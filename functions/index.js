@@ -1,4 +1,5 @@
 const { splitBill, burdenAmount } = require("./SplitBill");
+const { localSearch } = require("./yolp");
 
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
@@ -74,6 +75,15 @@ app.get("/grouppay/", async (req, res) => {
   res.send(data);
 });
 
+app.get("/grouppay/:id/", async (req, res) => {
+  const { id } = req.params;
+
+  const doc = await groupPayCollection.doc(id).get();
+
+  const data = await fetchGroupPay(doc);
+  res.send(data);
+});
+
 app.post("/grouppay/", async (req, res) => {
   const { name, members, groupName } = req.body;
 
@@ -113,23 +123,25 @@ app.post("/grouppay/:id/calculate/", async (req, res) => {
 
   const doc = await groupPayCollection.doc(id).get();
 
-  const settlement = await fetchSettlement(doc.id);
-  const data = Object.assign(doc.data(), {
-    id: doc.id,
-    settlement,
-    settlementAmount: splitBill(settlement),
-  });
+  const data = await fetchGroupPay(doc);
 
-  const uniqId = database.ref("/messages").push().key;
+  if (data.calculate) {
+    res.sendStatus(204);
+  } else {
+    data.calculate = true;
+    await groupPayCollection.doc(id).set(data);
 
-  database.ref("/messages").child(uniqId).set({
-    from: "BOT",
-    type: "CALCULATE_START",
-    data,
-    timestamp: new Date().getTime(),
-  });
+    const uniqId = database.ref("/messages").push().key;
 
-  res.send({});
+    database.ref("/messages").child(uniqId).set({
+      from: "BOT",
+      type: "CALCULATE_START",
+      data,
+      timestamp: new Date().getTime(),
+    });
+
+    res.send();
+  }
 });
 
 app.post("/grouppay/:id/approve/", async (req, res) => {
@@ -357,6 +369,7 @@ app.post("/grouppay/:id/settlement/", async (req, res) => {
       type: "SETTLEMENT",
       data: Object.assign(data, {
         id: doc.id,
+        groupPayId: id,
       }),
       timestamp: new Date().getTime(),
     });
@@ -383,4 +396,53 @@ app.post("/settlement/:id/members/", async (req, res) => {
   res.send(doc);
 });
 
+app.get("/sendmessage", (req, res) => {
+  const { message } = req.body;
+  const uniqId = database.ref("/messages").push().key;
+  database
+    .ref("/messages")
+    .child(uniqId)
+    .set({
+      data: {
+        message: message,
+      },
+      from: "memberId5",
+      timestamp: new Date().getTime(),
+      type: "TEXT",
+    });
+
+  res.send();
+});
+
 exports.api = functions.https.onRequest(app);
+
+exports.localSearch = functions.database
+  .ref("/messages")
+  .onUpdate(async (change, context) => {
+    const latestMessage = Object.values(change.after._data).reduce((p, c) =>
+      p.timestamp > c.timestamp ? p : c
+    );
+
+    if (
+      latestMessage.type === "TEXT" &&
+      latestMessage.data.message.includes("@GroupPay")
+    ) {
+      const query = latestMessage.data.message
+        .replace("@GroupPay", "")
+        .trim()
+        .split(" ")[0];
+
+      const uniqId = database.ref("/messages").push().key;
+      database
+        .ref("/messages")
+        .child(uniqId)
+        .set({
+          data: {
+            featureList: await localSearch(query),
+          },
+          from: "BOT",
+          timestamp: new Date().getTime(),
+          type: "LOCAL_SEARCH",
+        });
+    }
+  });
